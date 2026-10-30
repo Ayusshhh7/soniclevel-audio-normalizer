@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SonicLevel</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 10v3"/>
+            <path d="M6 6v11"/>
+            <path d="M10 3v18"/>
+            <path d="M14 8v7"/>
+            <path d="M18 5v13"/>
+            <path d="M22 10v4"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-title">SonicLevel</h1>
+          <span class="logo-subtitle" id="siteDomain">Current Tab</span>
+        </div>
+      </div>
+      
+      <!-- Master Power Toggle -->
+      <label class="power-toggle" title="Toggle Audio Processing">
+        <input type="checkbox" id="masterToggle" checked>
+        <span class="power-slider">
+          <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </span>
+      </label>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="main-body" id="mainControls">
+
+      <!-- Live VU / Level Visualizer -->
+      <div class="meter-panel">
+        <div class="meter-label">
+          <span>AUDIO OUTPUT LEVEL</span>
+          <span id="meterDbText">-∞ dB</span>
+        </div>
+        <div class="meter-bar-container">
+          <div class="meter-fill" id="vuMeterFill"></div>
+        </div>
+      </div>
+
+      <!-- Feature Card 1: Smart Normalizer (Dynamic Compressor) -->
+      <section class="card normalizer-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <div class="card-indicator" id="normalizerIndicator"></div>
+            <div>
+              <h2 class="card-title">Smart Normalizer</h2>
+              <p class="card-desc">Tames loud ads & balances quiet dialogue</p>
+            </div>
+          </div>
+          <label class="switch-toggle">
+            <input type="checkbox" id="normalizerToggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="preset-selector" id="normalizerPresets">
+          <button class="pill-btn" data-preset="subtle" title="Light leveling for acoustic & music">Subtle</button>
+          <button class="pill-btn active" data-preset="balanced" title="Standard ad suppression & clear speech">Balanced</button>
+          <button class="pill-btn" data-preset="aggressive" title="Night Mode: hard-limits explosions, boosts whispers">Night Mode</button>
+        </div>
+      </section>
+
+      <!-- Feature Card 2: Volume Booster -->
+      <section class="card volume-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Master Gain & Booster</h2>
+            <p class="card-desc">Boost quiet audio up to 400%</p>
+          </div>
+          <span class="gain-badge" id="gainValueText">100%</span>
+        </div>
+
+        <div class="slider-group">
+          <input type="range" id="masterVolumeSlider" min="0" max="400" value="100" step="5" class="range-slider">
+          <div class="gain-quick-buttons">
+            <button class="quick-btn" data-gain="50">50%</button>
+            <button class="quick-btn active" data-gain="100">100%</button>
+            <button class="quick-btn" data-gain="150">150%</button>
+            <button class="quick-btn" data-gain="200">200%</button>
+            <button class="quick-btn" data-gain="300">300%</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature Card 3: 5-Band Studio Equalizer -->
+      <section class="card eq-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">5-Band Equalizer</h2>
+            <p class="card-desc">Fine-tune frequencies & vocal clarity</p>
+          </div>
+          <select id="eqPresetSelect" class="eq-dropdown">
+            <option value="flat">Flat (Default)</option>
+            <option value="vocal">Vocal / Lecture Boost</option>
+            <option value="bass">Bass Booster</option>
+            <option value="night">Movie Anti-Boom</option>
+            <option value="treble">Treble & Clarity</option>
+          </select>
+        </div>
+
+        <!-- 5-Band Sliders -->
+        <div class="eq-sliders-container">
+          <!-- 60 Hz -->
+          <div class="eq-band">
+            <span class="eq-val" id="eqVal0">0dB</span>
+            <div class="eq-slider-wrapper">
+              <input type="range" class="vertical-slider eq-slider" data-band="0" min="-12" max="12" value="0" step="1">
+            </div>
+            <span class="eq-freq">60Hz</span>
+            <span class="eq-sub">Sub</span>
+          </div>
+
+          <!-- 250 Hz -->
+          <div class="eq-band">
+            <span class="eq-val" id="eqVal1">0dB</span>
+            <div class="eq-slider-wrapper">
+              <input type="range" class="vertical-slider eq-slider" data-band="1" min="-12" max="12" value="0" step="1">
+            </div>
+            <span class="eq-freq">250Hz</span>
+            <span class="eq-sub">Bass</span>
+          </div>
+
+          <!-- 1 kHz -->
+          <div class="eq-band">
+            <span class="eq-val" id="eqVal2">0dB</span>
+            <div class="eq-slider-wrapper">
+              <input type="range" class="vertical-slider eq-slider" data-band="2" min="-12" max="12" value="0" step="1">
+            </div>
+            <span class="eq-freq">1kHz</span>
+            <span class="eq-sub">Mids</span>
+          </div>
+
+          <!-- 4 kHz -->
+          <div class="eq-band">
+            <span class="eq-val" id="eqVal3">0dB</span>
+            <div class="eq-slider-wrapper">
+              <input type="range" class="vertical-slider eq-slider" data-band="3" min="-12" max="12" value="0" step="1">
+            </div>
+            <span class="eq-freq">4kHz</span>
+            <span class="eq-sub">Speech</span>
+          </div>
+
+          <!-- 12 kHz -->
+          <div class="eq-band">
+            <span class="eq-val" id="eqVal4">0dB</span>
+            <div class="eq-slider-wrapper">
+              <input type="range" class="vertical-slider eq-slider" data-band="4" min="-12" max="12" value="0" step="1">
+            </div>
+            <span class="eq-freq">12kHz</span>
+            <span class="eq-sub">Air</span>
+          </div>
+        </div>
+
+        <div class="eq-footer">
+          <button id="resetEqBtn" class="link-btn">Reset EQ to Flat</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="footer">
+      <label class="site-toggle-label">
+        <input type="checkbox" id="perSiteCheckbox" checked>
+        <span>Remember settings for this site</span>
+      </label>
+      <button id="resetAllBtn" class="reset-all-btn" title="Reset all settings to default">Reset</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
